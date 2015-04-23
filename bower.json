@@ -6,6 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "angular": ">1.2.0",
-    "intl-tel-input": "https://github.com/artemsilin/intl-tel-input.git"
+    "intl-tel-input": "https://github.com/artemsilin/intl-tel-input.git#a4380aa98f548f390db6a6d3d51347c3d73f5542"
   }
 }
