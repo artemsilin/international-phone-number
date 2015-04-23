@@ -1,6 +1,6 @@
 (function() {
   "use strict";
-  angular.module("internationalPhoneNumber", []).directive('internationalPhoneNumber', function($timeout) {
+  angular.module("internationalPhoneNumber", []).directive('internationalPhoneNumber', function() {
     return {
       restrict: 'A',
       require: '^ngModel',
@@ -60,15 +60,9 @@
             return watchOnce();
           });
         });
-        ctrl.$formatters.push(function(value) {
-          if (!value) {
-            return value;
-          } else {
-            $timeout(function() {
-              return element.intlTelInput('setNumber', value);
-            }, 0);
-            return element.val();
-          }
+        ctrl.$formatters.push(function(value) { 
+          element.intlTelInput('setNumber', value);
+          return element.val();
         });
         ctrl.$parsers.push(function(value) {
           if (!value) {
@@ -76,18 +70,22 @@
           }
           return value.replace(/[^\d]/g, '');
         });
-        ctrl.$validators.internationalPhoneNumber = function(value) {
-          if (!value) {
-            return value;
+        ctrl.$parsers.push(function(value) {
+          var validity;
+          if (value) {
+            validity = element.intlTelInput("isValidNumber");
+            ctrl.$setValidity('international-phone-number', validity);
+            ctrl.$setValidity('', validity);
           } else {
-            return element.intlTelInput("isValidNumber");
+            value = '';
+            delete ctrl.$error['international-phone-number'];
           }
-        };
+          return value;
+        });
         element.on('blur keyup change', function(event) {
           return scope.$apply(read);
         });
         return element.on('$destroy', function() {
-          element.intlTelInput('destroy');
           return element.off('blur keyup change');
         });
       }
